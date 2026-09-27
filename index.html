@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مدربتي - تمارين نسائية</title>
+<style>
+:root{
+  --pink:#FF5D8F; --purple:#7B5FE8; --teal:#00CFC1; --orange:#FFB020;
+  --bg:#FBF7FF; --card:#FFFFFF; --text:#2A1B3D; --sub:#6B5B7B; --line:#EDE3FA;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#1A1424; --card:#251A35; --text:#F3EBFF; --sub:#B9A6D4; --line:#3A2A50;
+}}
+:root[data-theme="dark"]{ --bg:#1A1424; --card:#251A35; --text:#F3EBFF; --sub:#B9A6D4; --line:#3A2A50; }
+html{scroll-padding-top:env(safe-area-inset-top,0px); height:100%;}
+*{box-sizing:border-box;}
+body{margin:0; min-height:100%; background:var(--bg); color:var(--text); font-family:-apple-system,Segoe UI,Tahoma,Arial,sans-serif;}
+.wrap{max-width:520px; margin:0 auto; padding:12px 12px 80px;}
+.hero{background:linear-gradient(135deg,var(--pink),var(--purple)); border-radius:18px; padding:16px; color:#fff; margin-bottom:12px;}
+.hero h1{margin:0 0 4px; font-size:20px;}
+.quote{font-size:12.5px; opacity:.95; line-height:1.6;}
+.banner{background:linear-gradient(135deg,var(--orange),var(--pink)); color:#fff; border-radius:14px; padding:10px 14px; font-size:13px; font-weight:700; margin-bottom:12px;}
+.card{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:14px; margin-bottom:12px;}
+.card h2{font-size:15px; margin:0 0 10px; color:var(--purple);}
+label{font-size:12px; color:var(--sub); display:block; margin-bottom:4px;}
+input,select{width:100%; padding:9px; border-radius:10px; border:1px solid var(--line); background:var(--bg); color:var(--text); font-size:14px; margin-bottom:10px;}
+.row{display:flex; gap:8px;}
+.row>div{flex:1;}
+button{border:none; border-radius:12px; padding:10px 14px; font-size:14px; font-weight:600; cursor:pointer;}
+.btn-main{background:linear-gradient(135deg,var(--pink),var(--purple)); color:#fff; width:100%;}
+.btn-sm{background:var(--line); color:var(--text); font-size:12px; padding:6px 10px;}
+.tabs{display:flex; gap:6px; overflow-x:auto; margin-bottom:12px; padding-bottom:4px;}
+.tab{flex:0 0 auto; padding:8px 12px; border-radius:20px; background:var(--card); border:1px solid var(--line); font-size:12px; white-space:nowrap; cursor:pointer;}
+.tab.active{background:var(--purple); color:#fff; border-color:var(--purple);}
+.ex{border:1px solid var(--line); border-radius:12px; padding:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; gap:8px;}
+.ex.done{opacity:.55;}
+.ex-name{font-size:13.5px; font-weight:600;}
+.ex-meta{font-size:11px; color:var(--sub);}
+.overlay{position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:flex-end; justify-content:center; z-index:50;}
+.overlay.show{display:flex;}
+.modal{background:var(--card); border-radius:20px 20px 0 0; padding:18px; max-width:520px; width:100%; text-align:center; max-height:92vh; overflow-y:auto;}
+.timer{font-size:44px; font-weight:800; margin:8px 0; color:var(--teal); transition:color .3s;}
+.timer.red{color:#FF3B3B;}
+.desc{font-size:12.5px; color:var(--sub); line-height:1.7; text-align:right; margin:6px 0;}
+.pill{display:inline-block; background:var(--line); color:var(--purple); font-size:11px; padding:3px 8px; border-radius:20px; margin-inline-end:4px;}
+.hidden{display:none;}
+a.ylink{color:var(--purple); font-size:12px; text-decoration:none; font-weight:600; display:inline-block; margin:6px 0;}
+.setpills{display:flex; gap:6px; justify-content:center; margin:8px 0;}
+.setpill{width:30px; height:30px; border-radius:50%; background:var(--line); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700;}
+.setpill.done{background:var(--teal); color:#fff;}
+.nav{position:fixed; bottom:0; inset-inline:0; background:var(--card); border-top:1px solid var(--line); display:flex; padding:8px 0 calc(8px + env(safe-area-inset-bottom,0px)); z-index:40;}
+.navbtn{flex:1; text-align:center; font-size:11px; color:var(--sub); background:none; border:none;}
+.navbtn.active{color:var(--purple); font-weight:700;}
+.stepicon{margin:8px auto;}
+.motiv{background:linear-gradient(135deg,var(--teal),var(--purple)); color:#fff; border-radius:12px; padding:10px; font-size:13px; margin:8px 0; font-weight:700;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero"><h1>💪 مدربتي</h1><div class="quote" id="quote"></div></div>
+
+  <div class="card" id="setupCard">
+    <h2>بياناتج (لمرة وحدة)</h2>
+    <div class="row"><div><label>الطول (سم)</label><input id="h" type="number" placeholder="160"></div>
+    <div><label>الوزن (كغم)</label><input id="w" type="number" placeholder="65"></div></div>
+    <div class="row"><div><label>العمر</label><input id="age" type="number" placeholder="25"></div>
+    <div><label>الهدف</label><select id="goal" onchange="toggleGoalKg()"><option value="lose">تنزيل وزن</option><option value="tone">جسم مرتب ومثالي</option></select></div></div>
+    <div id="goalKgWrap"><label>هدف الشهر: كم كيلو تريدين تنزلين خلال 4 أسابيع؟</label><input id="targetKg" type="number" placeholder="مثلا 4"></div>
+    <button class="btn-main" onclick="saveProfile()">حفظ وابدئي</button>
+    <p style="font-size:11px;color:var(--sub);margin-top:8px" id="syncNote"></p>
+  </div>
+
+  <div id="appArea" class="hidden">
+    <div id="viewHome"></div>
+    <div id="viewProgress" class="hidden"></div>
+    <div id="viewGuide" class="hidden"></div>
+  </div>
+</div>
+
+<div class="nav hidden" id="bottomNav">
+  <button class="navbtn active" id="nav-home" onclick="showView('home')">🏠<br>اليوم</button>
+  <button class="navbtn" id="nav-progress" onclick="showView('progress')">📊<br>التقدم</button>
+  <button class="navbtn" id="nav-guide" onclick="showView('guide')">📘<br>الدليل</button>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="stepicon" id="stepIcon"></div>
+    <div id="mTitle" style="font-weight:700;font-size:16px"></div>
+    <div class="desc" id="mDesc"></div>
+    <div class="desc" id="mBenefit" style="color:var(--teal);font-weight:600"></div>
+    <a class="ylink" id="mLink" target="_blank">▶ شوفي فيديو التمرين</a>
+    <div class="setpills" id="setPills"></div>
+    <div class="timer" id="timerDisp">00:00</div>
+    <div id="timerLbl" style="font-size:11px;color:var(--sub)"></div>
+    <div id="motivBox"></div>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px">
+      <button class="btn-main" style="flex:0 0 auto" id="actionBtn" onclick="doAction()">ابدئي</button>
+    </div>
+    <button class="btn-sm" style="margin-top:10px" onclick="closeModal()">إغلاق</button>
+  </div>
+</div>
+
+<script>
+const QUOTES=["كل تمرين اليوم استثمار بجسمج بكرة 🌸","القوة ما تجي من الراحة، تجي من التحدي 💪","خطوة اليوم أحسن من ندم بكرة","الاستمرارية أهم من الكمال ✨","جسمج يستاهل الدلال بالتمرين مو بالكسل"];
+const MOTIV=["برافو عليچ! 🔥 عدة زينة","استمري، جسمچ يتغير وياك 💪","شوية وتخلصين، لا تستسلمين","هذا التعب هو التغيير يصير 🌸"];
+document.getElementById('quote').textContent=QUOTES[Math.floor(Math.random()*QUOTES.length)];
+
+const ICONS={legs:"🦵",arms:"💪",core:"🔥",cardio:"🏃‍♀️"};
+const POOL={
+ legs:[{n:"سكوات بالدمبل",eq:"دمبل 2 كغم",cat:"legs",type:"reps",sets:3,reps:12,rest:45,
+   d:"1) وقفة وباعدي رجلج بعرض الكتف وحطي الدمبل قدام صدرچ. 2) انزلي جسمچ مثل جلسة الكرسي. 3) ارجعي فوگ بدفع الكعبين.",
+   b:"يقوي الفخذ والمؤخرة ويشد الجسم السفلي.", vq:"dumbbell squat exercise tutorial", vu:"https://www.youtube.com/watch?v=ciUS_Tqh090"},
+ {n:"لنجز (Lunges)",eq:"دمبل 1 كغم",cat:"legs",type:"reps",sets:3,reps:10,rest:45,
+   d:"1) خطوة قدام برجل وحدة. 2) انزلي الركبة الخلفية لين تقرب الأرض. 3) ارجعي للوقفة وبدلي الرجل.",
+   b:"يشد الأرداف والفخذ ويحسن التوازن.", vq:"beginner lunges exercise tutorial women"},
+ {n:"رفعة الحوض Glute Bridge",eq:"بدون جهاز",cat:"legs",type:"reps",sets:3,reps:15,rest:30,
+   d:"1) نامي وثني رجلينچ وباعديهن بعرض الحوض. 2) ادفعي الحوض للأعلى بشد المؤخرة. 3) انزلي ببطء وكرري.",
+   b:"يشد المؤخرة والفخذ الخلفي ويقوي أسفل الظهر.", vq:"glute bridge exercise tutorial"}],
+ arms:[{n:"ضغط كتف بالدمبل",eq:"دمبل 1-2 كغم",cat:"arms",type:"reps",sets:3,reps:12,rest:40,
+   d:"1) ارفعي الدمبل بمستوى الكتف. 2) ادفعيهن فوگ راسچ لين تفردين الذراع. 3) انزلي ببطء.",
+   b:"يشد الكتف ويقوي الذراع العلوي.", vq:"dumbbell shoulder press tutorial women"},
+ {n:"بايسيبس بالدمبل",eq:"دمبل 2 كغم",cat:"arms",type:"reps",sets:3,reps:15,rest:40,
+   d:"1) وقفة والدمبل بيدچ وذراعچ نازلة. 2) ثني الذراع لفوگ بحركة بطيئة. 3) انزلي متحكمة.",
+   b:"يشد عضلة الذراع الأمامية ويقويها.", vq:"dumbbell bicep curl tutorial"},
+ {n:"شد بالحبل المطاطي (Row)",eq:"حبل مط",cat:"arms",type:"reps",sets:3,reps:15,rest:40,
+   d:"1) ثبتي الحبل تحت رجلچ او بباب. 2) شدي الحبل جهة صدرچ بضم الكتفين. 3) ارجعي ببطء.",
+   b:"يشد الظهر والذراع ويحسن الوقفة.", vq:"resistance band row tutorial"}],
+ core:[{n:"بلانك",eq:"بدون جهاز",cat:"core",type:"time",sets:3,reps:30,rest:30,
+   d:"1) استلقي على بطنچ وارفعي جسمچ على الساعدين واصابع رجلچ. 2) خلي جسمچ خط مستقيم. 3) ثبتي بدون هبوط بالحوض.",
+   b:"يقوي عضلات البطن والظهر ويحمي العمود الفقري.", vq:"plank exercise tutorial correct form"},
+ {n:"كرنش بطن",eq:"بدون جهاز",cat:"core",type:"reps",sets:3,reps:15,rest:30,
+   d:"1) نامي وثني ركبتيچ. 2) ارفعي الجذع للأعلى بدون شد الرقبة. 3) انزلي ببطء.",
+   b:"يشد عضلة البطن الأمامية.", vq:"crunches exercise tutorial correct form"},
+ {n:"دوران جانبي بالحبل",eq:"حبل مط",cat:"core",type:"reps",sets:3,reps:15,rest:30,
+   d:"1) ثبتي الحبل قدامچ. 2) لفي جذعچ يمين ويسار بثبات الحوض. 3) كرري بالجهتين.",
+   b:"يقوي عضلات الخصر الجانبية.", vq:"standing russian twist band tutorial"}],
+ cardio:[{n:"قفز مكانچ (Jumping Jacks)",eq:"بدون جهاز",cat:"cardio",type:"time",sets:3,reps:40,rest:20,
+   d:"1) وقفة ورجلينچ متلاصقة. 2) اقفزي وباعدي رجلينچ وارفعي ايديچ فوگ. 3) ارجعي للوضع الأصلي بسرعة.",
+   b:"يرفع نبض القلب ويحرق دهون بسرعة.", vq:"jumping jacks tutorial beginner"},
+ {n:"جهاز المط - سحب كامل",eq:"جهاز مط",cat:"cardio",type:"time",sets:3,reps:40,rest:25,
+   d:"1) اربطي جهاز المط بثبات. 2) اسحبي بحركة كاملة ومتوسطة السرعة. 3) ارجعي بالتحكم.",
+   b:"يشغل كل الجسم ويحرق سعرات بوقت قصير.", vq:"resistance band full body workout tutorial"},
+ {n:"مشاية سريعة مع رفع الركبة",eq:"بدون جهاز",cat:"cardio",type:"time",sets:3,reps:45,rest:20,
+   d:"1) امشي بمكانچ. 2) ارفعي ركبتيچ لفوگ بالتناوب بسرعة. 3) حركي ايديچ وياها.",
+   b:"إحماء ممتاز وحرق دهون خفيف.", vq:"high knees exercise tutorial"}]
+};
+const DAYS=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+const FOCUS=["الجزء العلوي 💪","الأرجل والمؤخرة 🦵","كارديو وحرق 🔥","بطن وخصر","الأرجل والمؤخرة 🦵","تمدد وراحة نشطة","جسم كامل ⭐"];
+const PLAN=[["arms","core"],["legs"],["cardio","core"],["core","arms"],["legs"],["core"],["legs","arms","cardio"]];
+
+let profile=null, progress={}, weightLog=[], measureLog=[], waterLog={}, warmupDone={}, curDay=0, db=null, userNs=null, uid=null;
+let curExRef=null, curSet=1, phase='idle', timerInt=null, timerSec=0;
+
+function ls_get(k){try{return JSON.parse(localStorage.getItem(k));}catch(e){return null;}}
+function ls_set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+
+function baghdadDayIndex(){
+  const short=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Baghdad',weekday:'short'}).format(new Date());
+  const map={Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6};
+  return map[short]??0;
+}
+function todayKey(){
+  return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Baghdad'}).format(new Date());
+}
+
+async function initCloud(){
+  try{
+    const u=await claude.use('user');
+    const d=await claude.use('db');
+    if(u&&d){userNs=u;db=d;uid=u.id?u.id():null;
+      document.getElementById('syncNote').textContent='بيانتچ تنحفظ على حسابچ وتظهر بأي جهاز تدخلين بيه ✅';
+      if(uid){
+        try{
+          const doc=await db.doc('data/users/'+uid+'/progress').get();
+          if(doc&&doc.data){progress=doc.data.progress||progress; if(doc.data.profile)profile=doc.data.profile; if(doc.data.weightLog)weightLog=doc.data.weightLog; if(doc.data.measureLog)measureLog=doc.data.measureLog; if(doc.data.waterLog)waterLog=doc.data.waterLog; if(doc.data.warmupDone)warmupDone=doc.data.warmupDone;}
+        }catch(e){}
+      }
+    }else{
+      document.getElementById('syncNote').textContent='محفوظ بهذا الجهاز فقط (سجلي دخول لحفظ عبر الأجهزة).';
+    }
+  }catch(e){document.getElementById('syncNote').textContent='محفوظ بهذا الجهاز فقط.';}
+  boot();
+}
+function persist(){
+  ls_set('fit_progress',progress); ls_set('fit_profile',profile); ls_set('fit_weightlog',weightLog);
+  ls_set('fit_measurelog',measureLog); ls_set('fit_waterlog',waterLog); ls_set('fit_warmup',warmupDone);
+  if(db&&uid){ db.doc('data/users/'+uid+'/progress').set({progress,profile,weightLog,measureLog,waterLog,warmupDone}).catch(()=>{}); }
+}
+
+function boot(){
+  if(!profile) profile=ls_get('fit_profile');
+  if(!Object.keys(progress).length) progress=ls_get('fit_progress')||{};
+  if(!weightLog.length) weightLog=ls_get('fit_weightlog')||(profile?[{d:profile.startDate||Date.now(),w:profile.w}]:[]);
+  if(!measureLog.length) measureLog=ls_get('fit_measurelog')||[];
+  if(!Object.keys(waterLog).length) waterLog=ls_get('fit_waterlog')||{};
+  if(!Object.keys(warmupDone).length) warmupDone=ls_get('fit_warmup')||{};
+  if(profile){
+    document.getElementById('setupCard').classList.add('hidden');
+    document.getElementById('appArea').classList.remove('hidden');
+    document.getElementById('bottomNav').classList.remove('hidden');
+    curDay=baghdadDayIndex();
+    renderHome();renderProgress();renderGuide();
+  }
+}
+function toggleGoalKg(){
+  document.getElementById('goalKgWrap').style.display=document.getElementById('goal').value==='lose'?'block':'none';
+}
+function saveProfile(){
+  const h=+document.getElementById('h').value, w=+document.getElementById('w').value, age=+document.getElementById('age').value, goal=document.getElementById('goal').value;
+  const targetKg=goal==='lose'?(+document.getElementById('targetKg').value||3):0;
+  if(!h||!w||!age){alert('اكملي كل الحقول');return;}
+  profile={h,w,age,goal,targetKg,startDate:Date.now(),startWeight:w};
+  weightLog=[{d:Date.now(),w}];
+  persist();
+  document.getElementById('setupCard').classList.add('hidden');
+  document.getElementById('appArea').classList.remove('hidden');
+  document.getElementById('bottomNav').classList.remove('hidden');
+  curDay=baghdadDayIndex();
+  renderHome();renderProgress();renderGuide();
+}
+function logMeasure(){
+  const waist=+document.getElementById('waistIn').value, hip=+document.getElementById('hipIn').value;
+  if(!waist||!hip){return;}
+  measureLog.push({d:Date.now(),waist,hip}); persist(); renderHome();renderProgress();
+}
+function logWeight(){
+  const nv=+document.getElementById('newWeight').value;
+  if(!nv){return;}
+  profile.w=nv; weightLog.push({d:Date.now(),w:nv}); persist();
+  renderHome();renderProgress();
+}
+function isAggressive(){
+  if(!profile||profile.goal!=='lose'||!profile.targetKg)return false;
+  return (profile.targetKg/4)>0.75; // >0.75kg/week average is an aggressive pace
+}
+function showView(v){
+  ['home','progress','guide'].forEach(x=>{
+    document.getElementById('view'+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle('hidden',x!==v);
+    document.getElementById('nav-'+x).classList.toggle('active',x===v);
+  });
+}
+function exList(i){
+  let cats=[...PLAN[i]];
+  if(isAggressive()&&!cats.includes('cardio')&&FOCUS[i]!=='تمدد وراحة نشطة') cats=[...cats,'cardio'];
+  return cats.flatMap(c=>POOL[c]);
+}
+
+function renderHome(){
+  const today=baghdadDayIndex();
+  const bmr=10*profile.w+6.25*profile.h-5*profile.age-161;
+  let tdee=bmr*1.375, deficitNote='';
+  if(profile.goal==='lose'&&profile.targetKg){
+    const weeklyPace=profile.targetKg/4;
+    let dailyDeficit=Math.round((profile.targetKg*7700)/28);
+    const safeMax=Math.round((profile.w*1)*7700/7); // 1kg/week absolute ceiling
+    if(dailyDeficit>safeMax){dailyDeficit=safeMax;deficitNote='⚠️ هدفچ سريع شوية، عدلنا الخطة لوتيرة آمنة (لا تزيد عن 1 كغم بالأسبوع). استشيري مختصة إذا ممكن.';}
+    tdee=Math.max(tdee-dailyDeficit,1200);
+  }
+  const lunchG=Math.round((tdee*0.35)/1.5);
+  let html=`<div class="banner">📅 اليوم ${DAYS[today]} — تمارين ${FOCUS[today]}${isAggressive()?' + كارديو اضافي 🔥':''}</div>`;
+  if(profile.goal==='lose'&&profile.targetKg){
+    const elapsedDays=Math.floor((Date.now()-profile.startDate)/86400000);
+    const weeksLeft=Math.max(0,4-Math.floor(elapsedDays/7));
+    const lostSoFar=(profile.startWeight-profile.w).toFixed(1);
+    const pct=Math.min(100,Math.max(0,Math.round((lostSoFar/profile.targetKg)*100)));
+    html+=`<div class="card"><h2>🎯 هدف الشهر</h2>
+     <p style="font-size:13px;margin:4px 0">تنزيل <b>${profile.targetKg} كغم</b> خلال 4 أسابيع — باقي <b>${weeksLeft}</b> اسابيع</p>
+     <div style="background:var(--line);border-radius:10px;height:10px;overflow:hidden;margin:8px 0">
+       <div style="background:linear-gradient(135deg,var(--pink),var(--purple));height:100%;width:${pct}%"></div></div>
+     <p style="font-size:12px;color:var(--sub)">نزلتي لحد الحين: ${lostSoFar} كغم (${pct}%)</p>
+     ${deficitNote?`<p style="font-size:11.5px;color:var(--orange);font-weight:700;margin-top:6px">${deficitNote}</p>`:''}</div>`;
+  }
+  html+=`<div class="card"><h2>🍽 نظامچ الغذائي اليوم</h2>
+   <p style="font-size:13px;margin:4px 0">سعرات مقترحة: <b>${Math.round(tdee)}</b> سعرة</p>
+   <p style="font-size:13px;margin:4px 0">وزن وجبة الغداء: <b>${lunchG} غرام</b> بميزان الطعام</p></div>`;
+  const tk=todayKey(); const cupsTarget=Math.max(6,Math.ceil((profile.w*35)/250)); const cupsNow=waterLog[tk]||0;
+  html+=`<div class="card"><h2>💧 شرب الماي اليوم</h2>
+   <p style="font-size:13px;margin:4px 0">${'💧'.repeat(Math.min(cupsNow,cupsTarget))}${'◦'.repeat(Math.max(0,cupsTarget-cupsNow))} (${cupsNow}/${cupsTarget} كاسة)</p>
+   <div style="display:flex;gap:8px"><button class="btn-sm" onclick="addWater(-1)">−</button><button class="btn-sm" onclick="addWater(1)">+ كاسة</button></div></div>`;
+  const lastMeasure=measureLog.length?measureLog[measureLog.length-1].d:null;
+  const dueMeasure=!lastMeasure||(Date.now()-lastMeasure)>=14*86400000;
+  if(dueMeasure){
+    html=`<div class="banner">📏 حان وقت قياس الخصر والورك — سجليه بصفحة التقدم</div>`+html;
+  }
+  if(!warmupDone[tk]){
+    html+=`<div class="card"><h2>🔥 إحماء 3 دقايق</h2>
+     <p class="desc">قبل لا تبدين، سويلچ إحماء بسيط: مشي بمكانچ + دوران كتف + قفز خفيف.</p>
+     <button class="btn-main" onclick="startWarmup()">ابدئي الإحماء</button></div>`;
+  }
+  html+=`<div class="tabs">`+DAYS.map((d,i)=>`<div class="tab ${i===curDay?'active':''}" onclick="pickDay(${i})">${d}${i===today?' •':''}</div>`).join('')+`</div>`;
+  html+=`<div class="card"><h2>تمارين يوم ${DAYS[curDay]} — ${FOCUS[curDay]}</h2>`;
+  const list=exList(curDay); const dk='d'+curDay; progress[dk]=progress[dk]||{};
+  list.forEach((e,idx)=>{
+    const done=progress[dk][idx];
+    html+=`<div class="ex ${done?'done':''}"><div><div class="ex-name">${ICONS[e.cat]} ${e.n}</div>
+    <div class="ex-meta"><span class="pill">${e.eq}</span><span class="pill">${e.sets}×${e.reps}${e.type==='time'?'ث':'عدة'}</span></div></div>
+    <button class="btn-sm" onclick="openEx(${curDay},${idx})">${done?'تم ✅':'ابدئي'}</button></div>`;
+  });
+  html+='</div>';
+  document.getElementById('viewHome').innerHTML=html;
+}
+function addWater(delta){
+  const tk=todayKey(); waterLog[tk]=Math.max(0,(waterLog[tk]||0)+delta); persist(); renderHome();
+}
+function startWarmup(){
+  curExRef={warmup:true}; phase='warmup'; timerSec=180;
+  document.getElementById('stepIcon').innerHTML=`<span style="font-size:34px">🔥</span>`;
+  document.getElementById('mTitle').textContent='إحماء 3 دقايق';
+  document.getElementById('mDesc').textContent='مشي بمكانچ 1 دقيقة، دوران كتف وذراع 1 دقيقة، قفز خفيف 1 دقيقة.';
+  document.getElementById('mBenefit').textContent='يحمي مفاصلچ ويجهز جسمچ للتمرين.';
+  document.getElementById('mLink').style.display='none';
+  document.getElementById('setPills').innerHTML='';
+  document.getElementById('motivBox').innerHTML='';
+  updateDisp();
+  document.getElementById('actionBtn').textContent='ابدئي العد';
+  document.getElementById('overlay').classList.add('show');
+}
+function pickDay(i){curDay=i;renderHome();}
+
+function openEx(day,idx){
+  const e=exList(day)[idx];
+  curExRef={day,idx,e}; curSet=1; phase='idle';
+  document.getElementById('stepIcon').innerHTML=`<span style="font-size:34px">${ICONS[e.cat]}</span>`;
+  document.getElementById('mTitle').textContent=e.n;
+  document.getElementById('mDesc').textContent=e.d;
+  document.getElementById('mBenefit').textContent='الفايدة: '+e.b;
+  const link=e.vu||('https://www.youtube.com/results?search_query='+encodeURIComponent(e.vq));
+  document.getElementById('mLink').href=link;
+  document.getElementById('mLink').style.display='inline-block';
+  document.getElementById('mLink').textContent=e.vu?'▶ شوفي فيديو التمرين المحدد':'▶ ابحثي عن فيديو التمرين';
+  document.getElementById('motivBox').innerHTML='';
+  renderSetPills(); setPhaseWork();
+  document.getElementById('overlay').classList.add('show');
+}
+function renderSetPills(){
+  const e=curExRef.e;
+  document.getElementById('setPills').innerHTML=Array.from({length:e.sets},(_,i)=>
+    `<div class="setpill ${i+1<curSet?'done':''}">${i+1}</div>`).join('');
+}
+function setPhaseWork(){
+  phase='work'; const e=curExRef.e;
+  timerSec=e.type==='time'?e.reps:0;
+  document.getElementById('timerLbl').textContent=e.type==='time'?`المجموعة ${curSet}/${e.sets} — ثبتي`:`المجموعة ${curSet}/${e.sets} — ${e.reps} عدة`;
+  updateDisp();
+  document.getElementById('actionBtn').textContent=e.type==='time'?'ابدئي العد':'✅ خلصت العدة';
+}
+function updateDisp(){
+  const m=String(Math.floor(timerSec/60)).padStart(2,'0'),s=String(timerSec%60).padStart(2,'0');
+  const el=document.getElementById('timerDisp'); el.textContent=m+':'+s; el.classList.toggle('red',timerSec<=5&&timerSec>0);
+}
+function doAction(){
+  if(phase==='done'){closeModal();return;}
+  if(phase==='warmup'){
+    if(!timerInt){
+      timerInt=setInterval(()=>{timerSec--;updateDisp(); if(timerSec<=0){clearInterval(timerInt);timerInt=null;
+        warmupDone[todayKey()]=true; persist();
+        document.getElementById('motivBox').innerHTML='<div class="motiv">🔥 تمام! جسمچ جاهز الحين للتمرين</div>';
+        document.getElementById('timerDisp').textContent='✔️'; document.getElementById('actionBtn').textContent='رجوع'; phase='done';
+      }},1000);
+    }
+    return;
+  }
+  const e=curExRef.e;
+  if(phase==='work'){
+    if(e.type==='time'&&!timerInt){
+      timerInt=setInterval(()=>{timerSec--;updateDisp(); if(timerSec<=0){clearInterval(timerInt);timerInt=null;completeSet();}},1000);
+      return;
+    }
+    completeSet();
+  }else if(phase==='rest'){
+    clearInterval(timerInt);timerInt=null;
+    if(curSet>e.sets){finishExercise();}else{setPhaseWork();}
+  }
+}
+function completeSet(){
+  const e=curExRef.e; curSet++;
+  renderSetPills();
+  startRest(curSet>e.sets);
+}
+function startRest(isLast){
+  phase='rest'; const e=curExRef.e; timerSec=e.rest;
+  document.getElementById('timerLbl').textContent=isLast?'راحة أخيرة قبل التمرين الجاي':'راحة بين المجاميع';
+  document.getElementById('motivBox').innerHTML=`<div class="motiv">✅ ${MOTIV[Math.floor(Math.random()*MOTIV.length)]}</div>`;
+  updateDisp();
+  document.getElementById('actionBtn').textContent='تخطي الراحة ⏭';
+  timerInt=setInterval(()=>{timerSec--;updateDisp(); if(timerSec<=0){clearInterval(timerInt);timerInt=null; if(isLast){finishExercise();}else{setPhaseWork();}}},1000);
+}
+function finishExercise(){
+  const {day,idx}=curExRef;
+  const dk='d'+day; progress[dk]=progress[dk]||{}; progress[dk][idx]=true; persist();
+  document.getElementById('motivBox').innerHTML=`<div class="motiv">🎉 خلصتي التمرين! ${MOTIV[Math.floor(Math.random()*MOTIV.length)]}</div>`;
+  document.getElementById('timerLbl').textContent='';document.getElementById('timerDisp').textContent='✔️';
+  document.getElementById('actionBtn').textContent='رجوع لليوم';
+  phase='done';
+}
+function closeModal(){
+  document.getElementById('overlay').classList.remove('show');
+  clearInterval(timerInt);timerInt=null;
+  renderHome();renderProgress();
+}
+function renderProgress(){
+  let fullDays=0; for(let i=0;i<7;i++){const dk='d'+i; const list=exList(i); const done=progress[dk]?Object.values(progress[dk]).filter(Boolean).length:0; if(done>0&&done>=list.length) fullDays++;}
+  let badges='';
+  if(fullDays>=3) badges+='<span class="pill">🥉 3 ايام قوة</span>';
+  if(fullDays>=5) badges+='<span class="pill">🥈 5 ايام</span>';
+  if(fullDays>=7) badges+='<span class="pill">🥇 اسبوع كامل ذهبي</span>';
+  let html=`<div class="card"><h2>📊 تقدمچ الأسبوعي</h2><canvas id="chart" style="width:100%;height:150px"></canvas>
+   <p style="font-size:12px;color:var(--sub);margin-top:8px">أيام خلصتي فيها كل التمارين: <b>${fullDays}</b> من 7</p>
+   ${badges?`<div style="margin-top:8px">${badges}</div>`:''}</div>`;
+  const lm=measureLog.length?measureLog[measureLog.length-1]:null;
+  html+=`<div class="card"><h2>📏 قياسات الجسم</h2>
+   ${lm?`<p style="font-size:12px;color:var(--sub);margin-bottom:8px">آخر قياس: خصر ${lm.waist} سم، ورك ${lm.hip} سم</p>`:'<p style="font-size:12px;color:var(--sub);margin-bottom:8px">ما عندچ قياس محفوظ لسه</p>'}
+   <div class="row"><div><label>الخصر (سم)</label><input id="waistIn" type="number"></div><div><label>الورك (سم)</label><input id="hipIn" type="number"></div></div>
+   <button class="btn-main" onclick="logMeasure()">حفظ القياس</button>
+   <p style="font-size:11px;color:var(--sub);margin-top:6px">سجلي كل اسبوعين — الوزن وحده ما يوري شد الجسم.</p></div>`;
+  if(profile.goal==='lose'){
+    html+=`<div class="card"><h2>⚖️ سجلي وزنچ</h2>
+     <p style="font-size:12px;color:var(--sub);margin-bottom:8px">آخر وزن مسجل: <b>${profile.w} كغم</b></p>
+     <div class="row"><div><input id="newWeight" type="number" placeholder="الوزن الجديد كغم"></div>
+     <div style="flex:0 0 auto"><button class="btn-main" style="width:auto" onclick="logWeight()">حفظ</button></div></div>
+     <p style="font-size:11px;color:var(--sub)">سجلي وزنچ اسبوعياً وراح نعدل السعرات والخطة تلقائي حسب تقدمچ.</p></div>`;
+  }
+  document.getElementById('viewProgress').innerHTML=html;
+  setTimeout(drawChart,0);
+}
+function drawChart(){
+  const cv=document.getElementById('chart'); if(!cv)return;
+  const ctx=cv.getContext('2d'); const dpr=window.devicePixelRatio||1;
+  cv.width=cv.clientWidth*dpr; cv.height=150*dpr; ctx.scale(dpr,dpr);
+  const W=cv.clientWidth,H=150,barW=W/9;
+  ctx.clearRect(0,0,W,H);
+  DAYS.forEach((d,i)=>{
+    const dk='d'+i; const total=exList(i).length; const done=progress[dk]?Object.values(progress[dk]).filter(Boolean).length:0;
+    const ratio=total?done/total:0, h=ratio*100, x=barW*(i+0.7);
+    const grad=ctx.createLinearGradient(0,H-h-20,0,H-20); grad.addColorStop(0,'#FF5D8F'); grad.addColorStop(1,'#7B5FE8');
+    ctx.fillStyle=grad; ctx.fillRect(x,H-h-20,barW*0.6,h);
+    ctx.fillStyle='#9a8ab0'; ctx.font='10px sans-serif'; ctx.textAlign='center'; ctx.fillText(d.slice(0,3),x+barW*0.3,H-6);
+  });
+}
+function renderGuide(){
+  document.getElementById('viewGuide').innerHTML=`
+  <div class="card"><h2>⚖️ طريقة استعمال ميزان الطعام</h2>
+   <p class="desc">1) شغلي الميزان وحطي عليه الصحن الفاضي واضغطي Tare/Zero لين يصير الرقم صفر.<br>
+   2) حطي الأكل بالصحن وشوفي الوزن بالغرام مباشرة.<br>
+   3) وزني الأكل النيء (قبل الطبخ) إذا تريدين دقة أكثر بالسعرات، خصوصا الرز واللحم.<br>
+   4) لأكل مختلط بصحن وحد، زني الصحن الفاضي أول مرة واحفظي وزنه، بعدين اطرحيه من الوزن الكلي.<br>
+   5) استخدمي نفس الميزان دايماً لتكون المقارنة صحيحة بين الأيام.</p></div>
+  <div class="card"><h2>🍽 شلون توازنين الأكل</h2>
+   <p class="desc">1) قسمي صحنچ: نص خضار وسلطة، ربع بروتين (دجاج/لحم/بيض/عدس)، ربع نشويات (رز/خبز/بطاطا).<br>
+   2) اشربي مي وافرة قبل الأكل بربع ساعة يساعد على الشبع.<br>
+   3) لا تحذفين وجبة كامل حتى لو هدفچ تنزيل وزن، وزعي السعرات على 3 وجبات + سناك خفيف.<br>
+   4) قللي السكريات والمقالي تدريجياً بدل ما تمنعينها فجأة.<br>
+   5) وزني وجبة الغداء تحديداً لأنها الأكبر باليوم — راجعي الرقم بصفحة اليوم.</p></div>
+  <div class="card"><h2>⏰ شوكت أفضل وقت للتمرين</h2>
+   <p class="desc">1) الصباح الباكر (بعد الفطور الخفيف بساعة): يرفع النشاط طول اليوم ويحرق دهون أكثر عالريگ.<br>
+   2) العصر (بعد الظهر بـ3-4 ساعات): الجسم بأعلى مرونة وقوة، أفضل وقت لتمارين القوة.<br>
+   3) تجنبي التمرين مباشرة بعد وجبة دسمة، خلي فرق ساعة على الأقل.<br>
+   4) المهم الثبات: اختاري وقت تگدرين تكررينه يومياً حتى لو مو "الأفضل نظرياً".<br>
+   5) نامي 7-8 ساعات، النوم الجيد جزء اساسي من نتيجة التمرين.</p></div>`;
+}
+initCloud();
+</script>
+</body>
+</html>
